@@ -20,16 +20,12 @@ public class UserController {
     public UserController(UserService userService) {
         this.userService = userService;
     }
+
     @GetMapping
-    public String showUser(Principal principal, Model model){
-        User user=userService.findByUsername(principal.getName());
-        model.addAttribute("id",user.getId());
-        model.addAttribute("username",user.getUsername());
-        model.addAttribute("password",user.getPassword());
-        model.addAttribute("name",user.getName());
-        model.addAttribute("lastName",user.getLastName());
-        model.addAttribute("age",user.getAge());
-        model.addAttribute("roles",user.getRoles());
-        return "showUser";
+    public String showUser(Principal principal, Model model) {
+        User user = userService.findByUsername(principal.getName());
+        model.addAttribute("user", user);
+        model.addAttribute("userRoles", user.getRoles());
+        return "user";
     }
 }

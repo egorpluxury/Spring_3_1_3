@@ -1,6 +1,7 @@
 package ru.kata.spring.boot_security.demo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -8,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.repository.UserRepository;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,10 +23,10 @@ public class UserServiceImpl implements UserService {
         this.userRepository = userRepository;
     }
 
-    @Transactional(readOnly = true)
+
     @Override
     public User findByUsername(String username) {
-        return userRepository.findByUsername(username);
+        return userRepository.findByEmail(username);
     }
 
     @Transactional
@@ -34,28 +36,39 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
-    @Transactional(readOnly = true)
+
     @Override
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
-    @Transactional(readOnly = true)
+
     @Override
     public User showUserById(int id) {
-        Optional<User> userById=userRepository.findById(id);
-        return userById.orElse(null);
+        Optional<User> userById = userRepository.findById(id);
+        return userById.orElseThrow(EntityNotFoundException::new);
     }
+
     @Transactional
     @Override
     public void updateUserById(int id, User updateUser) {
-        updateUser.setId(id);
-        updateUser.setPassword(passwordEncoder.encode(updateUser.getPassword()));
-        userRepository.save(updateUser);
+        if (userRepository.existsById(id)) {
+            updateUser.setId(id);
+            updateUser.setPassword(passwordEncoder.encode(updateUser.getPassword()));
+            userRepository.save(updateUser);
+        } else {
+            throw new UsernameNotFoundException("User not found");
+        }
     }
+
     @Transactional
     @Override
     public void deleteUserById(int id) {
-        userRepository.deleteById(id);
+        if (userRepository.existsById(id)) {
+            userRepository.deleteById(id);
+        } else {
+            throw new UsernameNotFoundException("User not found");
+        }
+
     }
 }

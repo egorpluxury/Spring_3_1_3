@@ -14,13 +14,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Component
-public class dbInit implements ApplicationListener<ContextRefreshedEvent> {
+public class DbInit implements ApplicationListener<ContextRefreshedEvent> {
     private final RoleRepository roleRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public dbInit(RoleRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public DbInit(RoleRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
@@ -28,11 +28,11 @@ public class dbInit implements ApplicationListener<ContextRefreshedEvent> {
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
-        Role userRole=new Role();
+        Role userRole = new Role();
         userRole.setName("ROLE_USER");
         roleRepository.save(userRole);
 
-        Role adminRole=new Role();
+        Role adminRole = new Role();
         adminRole.setName("ROLE_ADMIN");
         roleRepository.save(adminRole);
 
@@ -49,6 +49,7 @@ public class dbInit implements ApplicationListener<ContextRefreshedEvent> {
         admin.setLastName("Ivanov");
         admin.setAge(32);
         admin.setName("Ivan");
+        admin.setEmail("admin@gmail.com");
 
         userRepository.save(admin);
 
@@ -59,6 +60,7 @@ public class dbInit implements ApplicationListener<ContextRefreshedEvent> {
         user.setLastName("Kirillov");
         user.setAge(32);
         user.setName("Kirill");
+        user.setEmail("user@gmail.com");
 
         userRepository.save(user);
     }
