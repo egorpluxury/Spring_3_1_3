@@ -23,10 +23,9 @@ public class UserServiceImpl implements UserService {
         this.userRepository = userRepository;
     }
 
-
     @Override
-    public User findByUsername(String username) {
-        return userRepository.findByEmail(username);
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 
     @Transactional
@@ -54,7 +53,6 @@ public class UserServiceImpl implements UserService {
     public void updateUserById(int id, User updateUser) {
         if (userRepository.existsById(id)) {
             updateUser.setId(id);
-            updateUser.setPassword(passwordEncoder.encode(updateUser.getPassword()));
             userRepository.save(updateUser);
         } else {
             throw new EntityNotFoundException("User not found");

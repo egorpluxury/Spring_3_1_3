@@ -43,23 +43,21 @@ public class DbInit implements ApplicationListener<ContextRefreshedEvent> {
         adminRoles.add(userRole);
 
         User admin = new User();
-        admin.setUsername("admin");
         admin.setPassword(passwordEncoder.encode("12345"));
         admin.setRoles(adminRoles);
         admin.setLastName("Ivanov");
         admin.setAge(32);
-        admin.setName("Ivan");
+        admin.setFirstName("Ivan");
         admin.setEmail("admin@gmail.com");
 
         userRepository.save(admin);
 
         User user = new User();
-        user.setUsername("user");
         user.setPassword(passwordEncoder.encode("54321"));
         user.setRoles(userRoles);
         user.setLastName("Kirillov");
         user.setAge(32);
-        user.setName("Kirill");
+        user.setFirstName("Kirill");
         user.setEmail("user@gmail.com");
 
         userRepository.save(user);

@@ -24,25 +24,22 @@ public class AdminController {
     }
 
     @GetMapping("/admin")
-    public String index(Model model, @ModelAttribute("user") User user, Principal principal) {
-        User authuser = userService.findByUsername(principal.getName());
-        model.addAttribute("user", authuser);
-        model.addAttribute("roles", authuser.getRoles());
+    public String index(Model model, Principal principal) {
+        model.addAttribute("user", userService.findByEmail(principal.getName()));
         model.addAttribute("users", userService.getAllUsers());
-        List<Role> roles = roleRepository.findAll();
-        model.addAttribute("allRoles", roles);
-        return "/adm_1";
+        model.addAttribute("allRoles", roleRepository.findAll());
+        model.addAttribute("newUser", new User());
+        return "/adminPage";
     }
 
     @PostMapping("/admin")
-    public String create(@ModelAttribute("user1") User user, Model model) {
+    public String create(User user) {
         userService.saveUser(user);
-        model.addAttribute("user1", new User());
         return "redirect:/admin";
     }
 
     @PatchMapping("/admin/{id}")
-    public String update(@ModelAttribute("person") User user, @PathVariable("id") int id, Model model) {
+    public String update(@ModelAttribute("user") User user, @PathVariable("id") int id) {
         userService.updateUserById(id, user);
         return "redirect:/admin";
     }
